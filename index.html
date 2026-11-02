@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Energy-Based Reasoners: Your Recurrent Reasoner Should be an Energy-Based Model</title>
+  <meta name="description" content="Energy-Based Reasoners replace a learned recurrent transition with gradient descent on one learned energy, which also decides when to stop and which candidate answer to keep.">
+  <meta property="og:title" content="Energy-Based Reasoners: Your Recurrent Reasoner Should be an Energy-Based Model">
+  <meta property="og:description" content="One learned energy refines, stops and selects. Over 99% Sudoku-Extreme accuracy with 1.8M parameters, up to 345x fewer inference FLOPs than EqR at comparable accuracy.">
+  <meta property="og:image" content="https://energy-based-reasoners.github.io/static/images/ebr_landscape_abc_v1.png">
+  <meta property="og:url" content="https://energy-based-reasoners.github.io/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛰️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,700|Noto+Sans:400,700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/katex/katex.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="stylesheet" href="static/hero/hero.css">
+  <link rel="stylesheet" href="static/multi/multi.css">
+</head>
+<body>
+  <header class="hero">
+    <h1 class="title-main"><span class="accent">Energy-Based Reasoners</span>: Your Recurrent Reasoner Should be an Energy-Based Model</h1>
+
+    <div class="authors">
+      <span class="author"><a href="https://wwillchen.github.io/" target="_blank" rel="noopener">William Chen</a><sup>1</sup>,</span>
+      <span class="author"><a href="https://alexiglad.github.io/" target="_blank" rel="noopener">Alexi Gladstone</a><sup>2</sup>,</span>
+      <span class="author"><a href="https://lizeyu090312.github.io/" target="_blank" rel="noopener">Zeyu Li</a><sup>1</sup>,</span>
+      <span class="author"><a href="https://blender.cs.illinois.edu/hengji.html" target="_blank" rel="noopener">Heng Ji</a><sup>2</sup>,</span>
+      <span class="author"><a href="https://yilundu.github.io/" target="_blank" rel="noopener">Yilun Du</a><sup>3</sup></span>
+    </div>
+    <div class="affils">
+      <span><sup>1</sup>Duke University</span><span><sup>2</sup>UIUC</span><span><sup>3</sup>Harvard University</span>
+    </div>
+
+    <nav class="links" aria-label="Paper links">
+      <a class="btn soon" aria-disabled="true" title="Coming soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5zM8 13v1.5h8V13zm0 3.5V18h8v-1.5zM8 9.5V11h3V9.5z"/></svg>
+        <span>Paper</span><span class="soon-badge">SOON</span>
+      </a>
+      <a class="btn soon" aria-disabled="true" title="Coming soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h7l2 3h7v15H4zm2 5v11h12V8z"/></svg>
+        <span>arXiv</span><span class="soon-badge">SOON</span>
+      </a>
+      <a class="btn" href="https://github.com/wwillchen/ebr" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+        <span>Code</span>
+      </a>
+    </nav>
+
+    <div class="tldr-block">
+      <p><b>TL;DR &ndash;</b> We introduce <b>Energy-Based Reasoners (EBRs)</b>, recurrent reasoners that learn an energy over latent reasoning states and reason by gradient descent on it. The same energy refines the state, tells it when to stop, and ranks candidate answers without an external verifier. With 1.8M parameters, EBRs reach over 99% accuracy on Sudoku-Extreme, using up to 345&times; fewer inference FLOPs than EqR at comparable accuracy, and they find more distinct valid solutions than prior methods on N-Queens and Graph Coloring.</p>
+    </div>
+    <figure class="fig hero-fig hero-anim">
+      <div class="ebr-hero" data-src="static/hero/">
+        <img src="static/hero/surface.png" alt="Learned energy landscape for one Sudoku puzzle" style="max-width:100%">
+      </div>
+    </figure>
+  </header>
+  <section class="band light" id="abstract">
+    <div class="narrow">
+      <h2 class="section-title">Abstract</h2>
+      <div class="prose">
+        <p>Looping is a powerful inductive bias for reasoning. By repeatedly iterating a recurrent block, looped models can scale their effective depth and enable multi-step reasoning in latent space. However, existing looped models are not inherently guided by an explicit measure of progress, making it difficult to determine when to stop looping and how to improve upon the current state. To enable this, we introduce <b>Energy-Based Reasoners</b> (<b>EBRs</b>), which learn an energy function over latent reasoning states and formulate looped updates as gradient descent on this energy. The energy scores latent states, while its gradient guides refinement and provides a signal for stopping. To train EBRs effectively, we further introduce exploration-based training to discover additional modes and to better shape the energy landscape over a broader set of states. Across four algorithmic reasoning benchmarks, EBRs outperform prior recurrent reasoning models, achieving 99.9% accuracy on Sudoku-Extreme while using 345&times; less inference compute than the next-best model and maintaining comparable training compute. On all multi-solution benchmarks, EBRs achieve state-of-the-art coverage of distinct valid solutions while maintaining near-100% single-sample accuracy. These results suggest that energy-based models are a promising approach for strong reasoning performance.</p>
+      </div>
+    </div>
+  </section>
+  <section class="band" id="why">
+    <div class="wrap">
+      <h2 class="topic-title">Why Energy?</h2>
+      <p class="section-lede">Existing looped reasoners update their latent state without any explicit assessment of it. An EBR learns a single energy function that guides refinement, stopping and selection.</p>
+      <div class="progression">
+        <div class="step">
+          <span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6889em;"></span><span class="mord mathbb">R</span></span></span></span></span>
+          <p><strong>Score.</strong> The energy rates the compatibility between the reasoning state <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.044em;">z</span></span></span></span> and the initial board <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>. Lower means better compatibility.</p>
+        </div>
+        <div class="step">
+          <span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6389em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord"><span class="mord">Π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathcal mtight">M</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord">∇</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mord"><span class="delimsizing size1">)</span></span></span></span></span></span>
+          <p><strong>Refine.</strong> The gradient turns the score into an improvement direction.</p>
+        </div>
+        <div class="step">
+          <span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-2.85em;"><span class="pstrut" style="height:3.2em;"></span><span style="width:0.556em;height:1.2em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.556em" height="1.2em" viewBox="0 0 556 1200"><path d="M145 15 v585 v0 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v0 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v0 v585 h43z
+M367 15 v585 v0 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v0 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M410 15 H367 v585 v0 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord">∇</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathcal mtight">M</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mord"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-2.85em;"><span class="pstrut" style="height:3.2em;"></span><span style="width:0.556em;height:1.2em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.556em" height="1.2em" viewBox="0 0 556 1200"><path d="M145 15 v585 v0 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v0 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v0 v585 h43z
+M367 15 v585 v0 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v0 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M410 15 H367 v585 v0 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span></span>
+          <p><strong>Stop.</strong> The state becomes stationary once the gradient is small, so the gradient acts as a stopping criterion.</p>
+        </div>
+        <div class="step">
+          <span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7387em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7387em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">⋆</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.6901em;vertical-align:-0.7521em;"></span><span class="mop">ar<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">min</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="delimsizing size1">(</span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mord"><span class="delimsizing size1">)</span></span></span></span></span></span>
+          <p><strong>Select.</strong> Among multiple candidate solutions, we pick the one with the lowest energy.</p>
+        </div>
+      </div>
+      <div class="why-fig">
+        <figure class="fig">
+          <img src="static/images/descent_curves.png" alt="Energy, gradient norm and residual during descent, solved vs wrong" loading="lazy" width="2201" height="602">
+        </figure>
+        <p class="caption"><strong>Correct solutions settle at low-energy stationary states.</strong> Energy, gradient norm and step size during descent on Sudoku-Extreme. Correct trajectories settle at low energy with small gradients, while wrong ones keep moving.</p>
+      </div>
+    </div>
+  </section>
+  <section class="band" id="scaling">
+    <div class="wrap">
+      <h2 class="topic-title">Test-Time Scaling</h2>
+      <p class="section-lede">Running more descent steps refines each answer further, and running more trajectories gives the energy more candidates to choose the lowest-energy one from.</p>
+      <figure class="fig scale-fig">
+        <img src="static/images/sudoku_ttc_frontier_web.png" alt="Sudoku-Extreme accuracy vs iterations with one sample (left), and vs number of samples (right)" loading="lazy" width="2198" height="782">
+      </figure>
+      <p class="caption scale-caption">EBRs reach EqR's best accuracy with <strong>7&times;</strong> fewer iterations (left) and <strong>43&times;</strong> fewer samples (right).</p>
+      <p class="caption caption-note">GRAM and TRM from GRAM's paper; EqR from its released checkpoint. Mean &plusmn; SD over three seeds.</p>
+    </div>
+  </section>
+  <section class="band" id="results">
+    <div class="wrap">
+      <h2 class="topic-title">Adaptive Stopping</h2>
+      <p class="section-lede">Each trajectory stops once its energy gradient falls below a threshold, so easy puzzles finish in a few steps and hard ones keep going.</p>
+      <figure class="fig fig-medium">
+        <img src="static/images/sudoku_tau_flops_web.png" alt="Sudoku-Extreme exact accuracy vs inference FLOPs per puzzle" loading="lazy" width="2199" height="1307">
+      </figure>
+      <div class="table-wrap fig-table">
+        <table class="rtable">
+          <thead>
+            <tr><th>Method</th><th># Params</th><th>Sudoku-Extreme &uarr;</th><th>Maze-Hard &uarr;</th></tr>
+          </thead>
+          <tbody>
+            <tr class="sub"><td colspan="4">Single sample (%)</td></tr>
+            <tr><td>TRM</td><td>5&ndash;7M</td><td>87.4</td><td>85.3</td></tr>
+            <tr><td>EqR</td><td>5&ndash;7M</td><td>93.0</td><td class="dim">&ndash;</td></tr>
+            <tr><td>FPRM</td><td>7M</td><td>94.2</td><td>87.0</td></tr>
+            <tr><td>GRAM</td><td>10M</td><td>86.6</td><td class="dim">&ndash;</td></tr>
+            <tr><td>Looped flows</td><td>5&ndash;7M</td><td>97.9</td><td>86.7</td></tr>
+            <tr class="ours"><td><strong>EBR</strong><span class="ours-tag">Ours</span></td><td><strong>1.8M</strong></td><td><strong>99.4</strong></td><td><strong>87.4</strong></td></tr>
+            <tr class="sub"><td colspan="4">Multiple samples (%), number of samples <em>N</em> in parentheses</td></tr>
+            <tr><td>PTRM</td><td>5&ndash;7M</td><td>98.8<span class="n">(100)</span></td><td>86.7<span class="n">(100)</span></td></tr>
+            <tr><td>EqR</td><td>5&ndash;7M</td><td>99.8<span class="n">(128)</span></td><td class="dim">&ndash;</td></tr>
+            <tr><td>GRAM</td><td>10M</td><td>96.1<span class="n">(20)</span></td><td class="dim">&ndash;</td></tr>
+            <tr><td>Looped flows</td><td>5&ndash;7M</td><td>99.3<span class="n">(5)</span></td><td>86.9<span class="n">(5)</span></td></tr>
+            <tr class="ours"><td><strong>EBR</strong><span class="ours-tag">Ours</span></td><td><strong>1.8M</strong></td><td><strong>99.9</strong><span class="n">(5)</span></td><td><strong>88.3</strong><span class="n">(5)</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">EBRs give the best single-sample accuracy among recurrent reasoners. Within only 5 passes, they reach 99.9% and 88.3%, ahead of methods that draw up to 128. Stopping each trajectory once its energy gradient falls below a threshold keeps 99.9% accuracy with 10.9&times; fewer FLOPs than a fixed-depth EBR, allowing us to surpass EqR with 345&times; fewer FLOPs.</p>
+    </div>
+  </section>
+  <section class="band" id="multi">
+    <div class="wrap">
+      <h2 class="topic-title">Multiple Solutions</h2>
+      <p class="section-lede">EBR acts like stochastic gradient descent and can capture many different solutions. Coverage captures the share of each input's distinct valid solutions that 20 samples find.</p>
+      <div class="table-wrap fig-table">
+        <table class="rtable rtable-even">
+          <colgroup><col class="c-method"><col span="4" class="c-data"></colgroup>
+          <thead>
+            <tr><th rowspan="2">Method</th><th class="group" colspan="2">N-Queens</th><th class="group" colspan="2">Graph Coloring</th></tr>
+            <tr><th>8&times;8</th><th>10&times;10</th><th>8-vertex</th><th>10-vertex</th></tr>
+          </thead>
+          <tbody>
+            <tr class="sub"><td>Single sample</td><td colspan="2">Pass@1 (%) &uarr;</td><td colspan="2">Conflicts &darr;</td></tr>
+            <tr><td>TRM</td><td>66.8</td><td>17.5</td><td>109.3</td><td>170.7</td></tr>
+            <tr><td>GRAM</td><td>99.5</td><td>89.7</td><td>8.3</td><td>31.3</td></tr>
+            <tr class="ours"><td><strong>EBR</strong><span class="ours-tag">Ours</span></td><td><strong>100</strong></td><td><strong>99.5</strong></td><td><strong>0</strong></td><td><strong>0</strong></td></tr>
+            <tr class="sub"><td>20 samples</td><td colspan="2">Cov@20 (%) &uarr;</td><td colspan="2">Cov@20 (%) &uarr;</td></tr>
+            <tr><td>TRM</td><td>22.6</td><td>2.0</td><td>22.3</td><td>6.8</td></tr>
+            <tr><td>GRAM</td><td>89.7</td><td>57.5</td><td>85.8</td><td>51.3</td></tr>
+            <tr class="ours"><td><strong>EBR</strong><span class="ours-tag">Ours</span></td><td><strong>98.1</strong></td><td><strong>92.0</strong></td><td><strong>88.6</strong></td><td><strong>54.5</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">Pass@1 (%) and Conflicts (edges summed over the test graphs) use one sample. Cov@20 is the share of distinct valid solutions found by 20 samples (%). Baselines from GRAM's paper.</p>
+      <div class="ebr-multi-pair">
+        <div class="ebr-multi-cell">
+          <h4>N-Queens 10&times;10</h4>
+          <div class="ebr-multi" data-task="nq"></div>
+        </div>
+        <div class="ebr-multi-cell">
+          <h4>Graph Coloring, 10 vertices</h4>
+          <div class="ebr-multi" data-task="gc"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="band" id="bibtex">
+    <div class="narrow">
+      <div class="bib-head">
+        <h2>BibTeX</h2>
+        <button class="copy-btn" id="copyBib" type="button">Copy</button>
+      </div>
+<pre class="bib" id="bibText">@misc{chen2026energybasedreasoners,
+  title  = {Energy-Based Reasoners: Your Recurrent Reasoner Should be an Energy-Based Model},
+  author = {Chen, William Xingxu and Gladstone, Alexi and Li, Zeyu Michael and Ji, Heng and Du, Yilun},
+  year   = {2026},
+  note   = {Preprint}
+}</pre>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <p>Page layout inspired by the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener">Academic Project Page Template</a>, adapted from <a href="https://nerfies.github.io" target="_blank" rel="noopener">Nerfies</a>.</p>
+    <p>Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var btn = document.getElementById("copyBib");
+      var txt = document.getElementById("bibText");
+      btn.addEventListener("click", function () {
+        navigator.clipboard.writeText(txt.innerText.trim()).then(function () {
+          btn.textContent = "Copied";
+          setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+        });
+      });
+    })();
+  </script>
+  <script src="static/hero/path.js"></script>
+  <script src="static/hero/hero.js" defer></script>
+  <script src="static/multi/multi_data.js"></script>
+  <script src="static/multi/multi.js" defer></script>
+</body>
+</html>
