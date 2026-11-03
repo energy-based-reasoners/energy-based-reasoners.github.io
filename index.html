@@ -51,7 +51,7 @@
     </nav>
 
     <div class="tldr-block">
-      <p><b>TL;DR &ndash;</b> We introduce <b>Energy-Based Reasoners (EBRs)</b>, reasoning models that refine a latent state by gradient descent on a learned energy. The same energy decides when to stop and ranks candidate answers without an external verifier. With 1.8M parameters, EBRs reach over 99% accuracy on Sudoku-Extreme, using up to 345&times; fewer inference FLOPs than EqR at comparable accuracy, and they find more distinct valid solutions than prior methods on N-Queens and Graph Coloring.</p>
+      <p><b>TL;DR &ndash;</b> We introduce <b>Energy-Based Reasoners (EBRs)</b>, reasoning models that learn an energy function over latent reasoning states and formulate looped updates as gradient descent on this energy. Its value scores candidate predictions without requiring an external verifier, while its gradient guides refinement and provides a natural signal for stopping. With only 1.8M parameters, EBRs achieve 99.9% accuracy on Sudoku-Extreme while using 345&times; less inference compute than the next-best model. On N-Queens and Graph Coloring, EBRs achieve state-of-the-art coverage while maintaining near-100% single-sample accuracy.</p>
     </div>
     <figure class="fig hero-fig hero-anim">
       <div class="ebr-hero" data-src="static/hero/">
