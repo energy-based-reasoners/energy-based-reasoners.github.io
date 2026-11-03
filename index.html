@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Energy-Based Reasoners: Your Recurrent Reasoner Should be an Energy-Based Model</title>
+  <title>Energy-Based Reasoners: Your Reasoning Model Should Be an Energy-Based Model</title>
   <meta name="description" content="Energy-Based Reasoners replace a learned recurrent transition with gradient descent on one learned energy, which also decides when to stop and which candidate answer to keep.">
-  <meta property="og:title" content="Energy-Based Reasoners: Your Recurrent Reasoner Should be an Energy-Based Model">
+  <meta property="og:title" content="Energy-Based Reasoners: Your Reasoning Model Should Be an Energy-Based Model">
   <meta property="og:description" content="One learned energy refines, stops and selects. Over 99% Sudoku-Extreme accuracy with 1.8M parameters, up to 345x fewer inference FLOPs than EqR at comparable accuracy.">
   <meta property="og:image" content="https://energy-based-reasoners.github.io/static/images/ebr_landscape_abc_v1.png">
   <meta property="og:url" content="https://energy-based-reasoners.github.io/">
@@ -22,7 +22,7 @@
 </head>
 <body>
   <header class="hero">
-    <h1 class="title-main"><span class="accent">Energy-Based Reasoners</span>: Your Recurrent Reasoner Should be an Energy-Based Model</h1>
+    <h1 class="title-main"><span class="accent">Energy-Based Reasoners</span>: Your Reasoning Model Should Be an Energy-Based Model</h1>
 
     <div class="authors">
       <span class="author"><a href="https://wwillchen.github.io/" target="_blank" rel="noopener">William Chen</a><sup>1</sup>,</span>
@@ -51,7 +51,7 @@
     </nav>
 
     <div class="tldr-block">
-      <p><b>TL;DR &ndash;</b> We introduce <b>Energy-Based Reasoners (EBRs)</b>, recurrent reasoners that learn an energy over latent reasoning states and reason by gradient descent on it. The same energy refines the state, tells it when to stop, and ranks candidate answers without an external verifier. With 1.8M parameters, EBRs reach over 99% accuracy on Sudoku-Extreme, using up to 345&times; fewer inference FLOPs than EqR at comparable accuracy, and they find more distinct valid solutions than prior methods on N-Queens and Graph Coloring.</p>
+      <p><b>TL;DR &ndash;</b> We introduce <b>Energy-Based Reasoners (EBRs)</b>, reasoning models that learn an energy over latent reasoning states and reason by gradient descent on it. The same energy refines the state, tells it when to stop, and ranks candidate answers without an external verifier. With 1.8M parameters, EBRs reach over 99% accuracy on Sudoku-Extreme, using up to 345&times; fewer inference FLOPs than EqR at comparable accuracy, and they find more distinct valid solutions than prior methods on N-Queens and Graph Coloring.</p>
     </div>
     <figure class="fig hero-fig hero-anim">
       <div class="ebr-hero" data-src="static/hero/">
@@ -147,7 +147,7 @@ c-10,0,-16.667,5,-20,15z M410 15 H367 v585 v0 v585 h43z"/></svg></span></span></
           </tbody>
         </table>
       </div>
-      <p class="caption">EBRs give the best single-sample accuracy among recurrent reasoners. Within only 5 passes, they reach 99.9% and 88.3%, ahead of methods that draw up to 128. Stopping each trajectory once its energy gradient falls below a threshold keeps 99.9% accuracy with 10.9&times; fewer FLOPs than a fixed-depth EBR, allowing us to surpass EqR with 345&times; fewer FLOPs.</p>
+      <p class="caption">EBRs give the best single-sample accuracy among reasoning models. Within only 5 passes, they reach 99.9% and 88.3%, ahead of methods that draw up to 128. Stopping each trajectory once its energy gradient falls below a threshold keeps 99.9% accuracy with 10.9&times; fewer FLOPs than a fixed-depth EBR, allowing us to surpass EqR with 345&times; fewer FLOPs.</p>
     </div>
   </section>
   <section class="band" id="multi">
@@ -193,7 +193,7 @@ c-10,0,-16.667,5,-20,15z M410 15 H367 v585 v0 v585 h43z"/></svg></span></span></
         <button class="copy-btn" id="copyBib" type="button">Copy</button>
       </div>
 <pre class="bib" id="bibText">@misc{chen2026energybasedreasoners,
-  title  = {Energy-Based Reasoners: Your Recurrent Reasoner Should be an Energy-Based Model},
+  title  = {Energy-Based Reasoners: Your Reasoning Model Should Be an Energy-Based Model},
   author = {Chen, William Xingxu and Gladstone, Alexi and Li, Zeyu Michael and Ji, Heng and Du, Yilun},
   year   = {2026},
   note   = {Preprint}
