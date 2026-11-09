@@ -36,13 +36,13 @@
     </div>
 
     <nav class="links" aria-label="Paper links">
-      <a class="btn soon" aria-disabled="true" title="Coming soon">
+      <a class="btn" href="https://arxiv.org/pdf/2611.08977" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5zM8 13v1.5h8V13zm0 3.5V18h8v-1.5zM8 9.5V11h3V9.5z"/></svg>
-        <span>Paper</span><span class="soon-badge">SOON</span>
+        <span>Paper</span>
       </a>
-      <a class="btn soon" aria-disabled="true" title="Coming soon">
+      <a class="btn" href="https://arxiv.org/abs/2611.08977" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h7l2 3h7v15H4zm2 5v11h12V8z"/></svg>
-        <span>arXiv</span><span class="soon-badge">SOON</span>
+        <span>arXiv</span>
       </a>
       <a class="btn" href="https://github.com/wwillchen/ebr" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
@@ -63,7 +63,7 @@
     <div class="narrow">
       <h2 class="section-title">Abstract</h2>
       <div class="prose">
-        <p>Looping is a powerful inductive bias for reasoning. By repeatedly iterating a recurrent block, looped models can scale their effective depth and enable multi-step reasoning in latent space. However, existing looped models are not inherently guided by an explicit measure of progress, making it difficult to determine when to stop looping and how to improve upon the current state. To enable this, we introduce <b>Energy-Based Reasoners</b> (<b>EBRs</b>), which learn an energy function over latent reasoning states and formulate looped updates as gradient descent on this energy. The energy scores latent states, while its gradient guides refinement and provides a signal for stopping. To train EBRs effectively, we further introduce exploration-based training to discover additional modes and to better shape the energy landscape over a broader set of states. Across four algorithmic reasoning benchmarks, EBRs outperform prior recurrent reasoning models, achieving 99.9% accuracy on Sudoku-Extreme while using 345&times; less inference compute than the next-best model and maintaining comparable training compute. On all multi-solution benchmarks, EBRs achieve state-of-the-art coverage of distinct valid solutions while maintaining near-100% single-sample accuracy. These results suggest that energy-based models are a promising approach for strong reasoning performance.</p>
+        <p>Looping is a powerful inductive bias for reasoning. By repeatedly iterating a recurrent block, looped models can scale their effective depth and enable multi-step reasoning in latent space. However, existing looped models are not inherently guided by an explicit measure of progress, making it difficult to determine when to stop looping and how to improve upon the current state. To enable this, we introduce <b>Energy-Based Reasoners</b> (<b>EBRs</b>), which learn an energy function over latent reasoning states and formulate looped updates as gradient descent on this energy. The energy scores latent states, while its gradient guides refinement and provides a signal for stopping. To train EBRs effectively, we further introduce exploration-based training to discover additional modes and to better shape the energy landscape over a broader set of states. Across four algorithmic reasoning benchmarks, EBRs match or outperform prior recurrent reasoning models, achieving 99.9% accuracy on Sudoku-Extreme while using 345&times; less inference compute than the next-best model and maintaining comparable training compute. On all multi-solution benchmarks, EBRs achieve state-of-the-art coverage of distinct valid solutions while maintaining near-100% single-sample accuracy. These results suggest that energy-based models are a promising approach for strong reasoning performance.</p>
       </div>
     </div>
   </section>
@@ -193,10 +193,13 @@ c-10,0,-16.667,5,-20,15z M410 15 H367 v585 v0 v585 h43z"/></svg></span></span></
         <button class="copy-btn" id="copyBib" type="button">Copy</button>
       </div>
 <pre class="bib" id="bibText">@misc{chen2026energybasedreasoners,
-  title  = {Energy-Based Reasoners: Your Reasoning Model Should Be an Energy-Based Model},
-  author = {Chen, William Xingxu and Gladstone, Alexi and Li, Zeyu Michael and Ji, Heng and Du, Yilun},
-  year   = {2026},
-  note   = {Preprint}
+  title         = {Energy-Based Reasoners: Your Recurrent Reasoner Should Be an Energy-Based Model},
+  author        = {Chen, William Xingxu and Gladstone, Alexi and Li, Zeyu Michael and Ji, Heng and Du, Yilun},
+  year          = {2026},
+  eprint        = {2611.08977},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG},
+  url           = {https://arxiv.org/abs/2611.08977}
 }</pre>
     </div>
   </section>
