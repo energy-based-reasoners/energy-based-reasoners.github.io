@@ -1,6 +1,6 @@
 # Energy-Based Reasoners
 
-Project page for **Energy-Based Reasoners: Your Reasoning Model Should Be an Energy-Based Model**.
+Project page for **Energy-Based Reasoners: Your Recurrent Reasoner Should Be an Energy-Based Model**.
 
 - Page: <https://energy-based-reasoners.github.io>
 - Paper: <https://arxiv.org/abs/2611.08977>
